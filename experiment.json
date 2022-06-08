@@ -1,0 +1,108 @@
+{
+    "title": "My flask app experiment",
+    "description": "sample demo to determine resiliency in existing flask web app",
+    "tags": [
+        "python",
+        "flask"
+    ],
+    "contributions": {  
+        "reliability": "high",
+        "scalability": "high",
+        "performance": "medium",
+        "security": "none"
+    },
+    "steady-state-hypothesis": {
+        "title": "Website is OK",
+        "probes": [
+            {
+                "type": "probe",
+                "name": "website must be up and running",
+                "tolerance": 200,
+                "provider": {
+                    "type": "http",
+                    "timeout": [
+                        3,
+                        5
+                    ],   
+                    "url": "http://localhost:5002/",
+                    "method":"GET"
+                }
+            }
+        ]
+    },
+    "method": [
+        {
+            "type": "probe",
+            "name": "website must return 500",
+            "tolerance": 500,
+            "provider": {
+                "type": "http",
+                "url": "http://localhost:5002/return-failure",
+                "timeout": [
+                    3,
+                    5
+                ],
+                "method": "GET",
+                "headers": {
+                    "x-proofdock-attack": "{'actions':[{'name':'fault','value':'Exception'}]}"
+                }
+            },
+            "controls": [
+                {
+                    "name": "proof-dock-attack",
+                    "provider": {
+                        "type": "python",
+                        "module": "proofdock.control"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "probe",
+            "name": "website must return 200 with json response",
+            "tolerance": {
+                "type": "jsonpath",
+                "path": "$.name",
+                "expect": [
+                    "Karan"
+                ],
+                "target": "body"
+            },
+            "provider": {
+                "type": "http",
+                "url": "http://localhost:5002/json-example",
+                "timeout": [
+                    3,
+                    5
+                ],
+                "method": "GET",
+                "expected_status": 200
+            },
+            "controls": [
+                {
+                    "name": "200-json-response-check",
+                    "provider": {
+                        "type": "python",
+                        "module": "jsonresponse.control"
+                    }
+                }
+            ]
+        }
+    ],
+    "rollbacks": [
+        {
+            "type": "action",
+            "name": "website must return 200",
+            "tolerance": 200,
+            "provider": {
+                "type": "http",
+                "url": "http://localhost:5002/",
+                "timeout": [
+                    3,
+                    5
+                ],
+                "method": "GET"
+            }
+        }
+    ]
+}
