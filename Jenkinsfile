@@ -61,7 +61,7 @@ pipeline {
     }
     stage('run chaos experiments') {
       steps {
-        sh 'cd /home/ubuntu/jenkins/workspace/chaostoolkit/chaostk/bin/chaos && chaos --verbose run experiment.json'
+        sh "chaos --verbose run experiment.json"
       }   
     }
     stage('Experiment Report'){
