@@ -23,18 +23,18 @@ pipeline {
       sh "pip install -r requirements.txt"
     }
   }
-  stage("Run Application")
-  {
-    steps{
-      sh "python app.py"
+  // stage("Run Application")
+  // {
+  //   steps{
+  //     sh "python app.py"
+  //   }
+  // }
+    stage('Build Docker') {
+      steps {
+         // build the docker image from the source code using the BUILD_ID parameter in image name
+         sh "docker build -t chaosexperiment ."
+      }
     }
-  }
-    // stage('Build Docker') {
-    //   steps {
-    //      // build the docker image from the source code using the BUILD_ID parameter in image name
-    //      sh "docker build -t chaos ."
-    //   }
-    // }
     // stage('Publish image to Docker Hub') {
           
     //              steps {
@@ -47,18 +47,18 @@ pipeline {
                     
     //               }
     //           }
-    // stage('Stop Running Container'){
+    stage('Stop Running Container'){
              
-    //              steps{
-    //                    bat 'docker ps -qf  expose=5002/tcp && docker ps -qf name=chaos | docker rm -f chaos'
+                 steps{
+                       sh'docker ps -qf  expose=5002/tcp && docker ps -qf name=chaos | docker rm -f chaos'
                        
-    //                 }
-    //             }
-    // stage("run docker container") {
-    //   steps {
-    //     sh "docker run -d -p 5002:5002 --name chaos -d chaos-toolkit-for-webapp"
-    //   }
-    // }
+                    }
+                }
+    stage("run docker container") {
+      steps {
+        sh "docker run -d -p 5002:5002 --name chaos -d chaosexperiment"
+      }
+    }
     stage('run chaos experiments') {
       steps {
         sh 'chaos --verbose run experiment.json'
