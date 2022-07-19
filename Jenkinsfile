@@ -13,7 +13,7 @@ pipeline {
     stage("Activate environment") {
         steps {
           sh "python3 -m venv chaostk"
-            sh "source chaostk/bin/activate"
+            sh ". chaostk/bin/activate"
         }
     }
 
