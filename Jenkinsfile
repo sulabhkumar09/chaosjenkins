@@ -12,13 +12,14 @@ pipeline {
   stages {
     stage("Activate environment") {
         steps {
-          sh "python3 -m venv chaostk"
             sh ". chaostk/bin/activate"
         }
     }
   stage("Install Requirments")
   {
     steps{
+      sh "pip install -U chaostoolkit"
+      sh "pip install -U chaostoolkit-reporting"
       sh "pip install -r requirements.txt"
     }
   }
@@ -62,6 +63,11 @@ pipeline {
       steps {
         sh 'chaos --verbose run experiment.json'
       }   
+    }
+    stage('Experiment Report'){
+      steps{
+        sh 'chaos report --export-format=pdf journal.json report.pdf'
+      }
     }
   }
 }
