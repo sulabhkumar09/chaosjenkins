@@ -24,7 +24,7 @@
                         3,
                         5
                     ],   
-                    "url": "http://localhost:5002/",
+                    "url": "localhost:5002/",
                     "method":"GET"
                 }
             }
@@ -37,7 +37,7 @@
             "tolerance": 500,
             "provider": {
                 "type": "http",
-                "url": "http://localhost:5002/return-failure",
+                "url": "localhost:5002/return-failure",
                 "timeout": [
                     3,
                     5
@@ -64,13 +64,13 @@
                 "type": "jsonpath",
                 "path": "$.name",
                 "expect": [
-                    "Karan"
+                    "Sulabh"
                 ],
                 "target": "body"
             },
             "provider": {
                 "type": "http",
-                "url": "http://localhost:5002/json-example",
+                "url": "localhost:5002/json-example",
                 "timeout": [
                     3,
                     5
@@ -96,7 +96,7 @@
             "tolerance": 200,
             "provider": {
                 "type": "http",
-                "url": "http://localhost:5002/",
+                "url": "localhost:5002/",
                 "timeout": [
                     3,
                     5

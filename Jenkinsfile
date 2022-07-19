@@ -1,26 +1,50 @@
 pipeline {
 
-  agent { label "master" }
+  agent {label 'chaos'}
 
-  environment {
-     PATH = "$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Docker.app/Contents/Resources/bin"
-  }
+   environment {                                      
+
+                     registry = "sulabhdocker09/chaos"
+                     registryCredential = 'dockerhub'
+                    
+                }
 
   stages {
-    stage("Check environment") {
+    stage("Activate environment") {
         steps {
-            echo "PATH is: $PATH"
+            sh "cd /home/ec2-user"
+            sh "source chaostk/bin/activate"
         }
     }
+
     stage('Build Docker') {
       steps {
          // build the docker image from the source code using the BUILD_ID parameter in image name
-         sh "docker build -t chaos-toolkit-for-webapp ."
+         sh "docker build -t chaos ."
       }
     }
+    stage('Publish image to Docker Hub') {
+          
+                 steps {
+                     script{
+                         withDockerRegistry(credentialsId: 'dockerhub') {
+                         sh  'docker push sulabhdocker09/chaos:latest'
+                         
+                         }
+                    } 
+                    
+                  }
+              }
+    stage('Stop Running Container'){
+             
+                 steps{
+                       bat 'docker ps -qf  expose=5002/tcp && docker ps -qf name=chaos | docker rm -f chaos'
+                       
+                    }
+                }
     stage("run docker container") {
       steps {
-        sh "docker run -p 5002:5002 --name chaos-toolkit-for-webapp -d chaos-toolkit-for-webapp"
+        sh "docker run -d -p 5002:5002 --name chaos -d chaos-toolkit-for-webapp"
       }
     }
     stage('run chaos experiments') {

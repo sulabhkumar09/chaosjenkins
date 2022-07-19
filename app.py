@@ -29,7 +29,7 @@ def form_example():
 
 @app.route('/json-example')
 def json_example():
-    return jsonify({"name": "Karan"}), 200
+    return jsonify({"name": "Sulabh"}), 200
 
 if __name__ == '__main__':
     # run app in debug mode on port 5002
