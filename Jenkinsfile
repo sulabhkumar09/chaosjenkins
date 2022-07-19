@@ -12,7 +12,6 @@ pipeline {
   stages {
     stage("Activate environment") {
         steps {
-            sh "cd /home/ubuntu"
             sh "source chaostk/bin/activate"
         }
     }
