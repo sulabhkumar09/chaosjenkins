@@ -32,7 +32,7 @@ pipeline {
     stage('Build Docker') {
       steps {
          // build the docker image from the source code using the BUILD_ID parameter in image name
-         sh "docker build -t chaosexperiment ."
+         sh "docker build -f Dockerfile.experiment -t chaosexperiment ."
       }
     }
     // stage('Publish image to Docker Hub') {
