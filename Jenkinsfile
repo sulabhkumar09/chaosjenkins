@@ -78,5 +78,14 @@ pipeline {
         """
       }
     }
+    stage('Deploy Report'){
+      steps{
+        sh  """
+        docker build --build-arg build=${BUILD_NUMBER} -f Dockerfile.reports -t chaosreports .
+        docker ps -qf  expose=80/tcp && docker ps -qf name=chaosreport | docker rm -f chaosreport
+        docker run -d -p 80:80 --name chaosreport chaosreports
+        """
+      }
+    }
   }
 }
