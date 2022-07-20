@@ -60,13 +60,22 @@ pipeline {
       }
     }
     stage('run chaos experiments') {
-      steps {
-        sh "/home/ubuntu/jenkins/workspace/chaostoolkit/chaostk/bin/chaos --verbose run experiment.json"
-      }   
+      // steps {
+      //   sh "/home/ubuntu/jenkins/workspace/chaostoolkit/chaostk/bin/chaos --verbose run experiment.json"
+      // }
+     steps {
+        sh """
+        . chaostk/bin/activate
+        chaos --verbose run experiment.json
+        """
+      }    
     }
     stage('Experiment Report'){
       steps{
-        sh 'chaos report --export-format=pdf journal.json report.pdf'
+         sh """
+        . chaostk/bin/activate
+        chaos report --export-format=html journal.json report_${BUILD_NUMBER}.html
+        """
       }
     }
   }
