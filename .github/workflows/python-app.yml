@@ -4,6 +4,9 @@
 name: Python application
 
 on:
+  push:
+    branches:
+    - main
   workflow_dispatch:
     inputs:
       deploymentEnvironment:
@@ -28,8 +31,16 @@ jobs:
     - uses: actions/checkout@v4
     - name: SetEnv For Manual Cleanup
       id: identify
-      if: github.event_name == 'workflow_dispatch'
       run: |
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]]; then
+            export Account="${{ github.event.inputs.deploymentEnvironment }}"
+            echo "account=${Account}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.github.event.schedule }}" == "true" ]]; then
+           echo "::set-state name=enironment::Dev1";
+            echo "::set-state name=region::us-east-2";
+          else
+            echo "::set-env name=GHA_ENV::unknown"
+          fi
           export Account="${{ github.event.inputs.deploymentEnvironment }}"
           echo "account=${Account}" >> $GITHUB_OUTPUT
     - name: Set up Python 3.10
