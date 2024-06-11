@@ -46,4 +46,4 @@ jobs:
     - uses: actions/checkout@v4
     - name: Test with pytest
       run: |
-        pytest ${{needs.build.env.accountID}}
+        pytest "${{ needs.build.outputs.account }}"
