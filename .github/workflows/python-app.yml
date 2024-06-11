@@ -21,13 +21,17 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    outputs:
+      account: ${{ steps.identify.outputs.account }}
 
     steps:
     - uses: actions/checkout@v4
     - name: SetEnv For Manual Cleanup
+      id: identify
       if: github.event_name == 'workflow_dispatch'
       run: |
-          echo "accountID=${{ github.event.inputs.deploymentEnvironment }}" >> $GITHUB_ENV
+          export Account="${{ github.event.inputs.deploymentEnvironment }}"
+          echo "account=${Account}" >> $GITHUB_OUTPUT
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
