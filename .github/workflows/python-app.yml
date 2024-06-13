@@ -4,9 +4,10 @@
 name: Python application
 
 on:
-  push:
-    branches:
-    - main
+  schedule:
+    - cron: '0 12 * * *'
+    - cron: '30 9 * * *'
+    - cron: '0 10 * * *'
   workflow_dispatch:
     inputs:
       deploymentEnvironment:
@@ -32,17 +33,14 @@ jobs:
     - name: SetEnv For Manual Cleanup
       id: identify
       run: |
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             export Account="${{ github.event.inputs.deploymentEnvironment }}"
             echo "account=${Account}" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.github.event.schedule }}" == "true" ]]; then
-           echo "::set-state name=enironment::Dev1";
-            echo "::set-state name=region::us-east-2";
+          elif [[ "${{  github.event_name  }}" == "schedule" ]]; then
+            echo "account=abc" >> $GITHUB_OUTPUT
           else
             echo "::set-env name=GHA_ENV::unknown"
           fi
-          export Account="${{ github.event.inputs.deploymentEnvironment }}"
-          echo "account=${Account}" >> $GITHUB_OUTPUT
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
