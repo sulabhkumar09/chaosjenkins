@@ -15,8 +15,9 @@ on:
           - Production 
 
   release:
-    types: [created]
     tags: ["abc"]
+    types: [created]
+    
   
 permissions:
   contents: read
