@@ -15,7 +15,7 @@ on:
           - Production 
 
   release:
-    tags: ["abc"]
+    tags: [abc]
     types: [created]
     
   
