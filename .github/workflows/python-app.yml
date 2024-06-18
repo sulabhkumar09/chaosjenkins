@@ -26,7 +26,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: ${{ github.event.release.tag_name == 'abc'*}}
+    if: ${{ github.event.release.tag_name == 'abc*'}}
     outputs:
       account: ${{ steps.identify.outputs.account }}
 
