@@ -4,6 +4,8 @@
 name: Python application
 
 on:
+  schedule:
+    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs:
       deploymentEnvironment:
@@ -15,7 +17,6 @@ on:
           - Production 
 
   release:
-    tagName : ["abc"]
     types: [created]
     
   
@@ -26,7 +27,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: contains(github.event.release.tag_name,'abc')
+    if: contains(github.event.release.tag_name,'abc') || ${{github.event.schedule}}
     outputs:
       account: ${{ steps.identify.outputs.account }}
 
