@@ -27,6 +27,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
     if: contains(github.event.release.tag_name,'abc') || ${{github.event.schedule}}
     outputs:
       account: ${{ steps.identify.outputs.account }}
@@ -53,9 +54,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: [build]
+    strategy:
+        matrix:
+          region: [us-east-1, us-east-2]   
+          exclude : 
+            - region: ${{ github.event.inputs.deploymentEnvironment != 'Production' && 'us-east-2' }}
 
     steps:
     - uses: actions/checkout@v4
     - name: Test with pytest
       run: |
-        pytest "${{ needs.build.outputs.account }}"
+        pytest "${{ matxi.region}}"
