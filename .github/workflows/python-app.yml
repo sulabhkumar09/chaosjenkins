@@ -4,8 +4,9 @@
 name: Python application
 
 on:
-  # schedule:
-  #   - cron: '0 10 * * *'
+  schedule:
+     - cron: '0 10 * * *'
+     - cron: '50 9 * * *'
   workflow_dispatch:
     inputs:
       deploymentEnvironment:
