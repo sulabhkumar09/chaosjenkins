@@ -28,7 +28,7 @@ jobs:
 
     runs-on: ubuntu-latest
     
-    if: (contains(github.event.release.tag_name,'abc') || ${{github.event.schedule}})
+    if: (contains(github.event.release.tag_name,'abc')) || ${{github.event.schedule}}
     outputs:
       account: ${{ steps.identify.outputs.account }}
 
